@@ -4,7 +4,7 @@
 namespace Stellion\Primbg;
 
 
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
@@ -20,7 +20,7 @@ use Stellion\Primbg\ValueObjects\Token;
  * Class PrimbgClient
  * @package Stellion\Primbg
  */
-class PrimbgClient
+class Client
 {
     const DEFAULT_TIMEOUT = 60;
 
@@ -44,7 +44,7 @@ class PrimbgClient
     public function __construct(Endpoint $endpoint, Token $token)
     {
         $this->token = $token;
-        $this->httpClient = new Client([
+        $this->httpClient = new HttpClient([
                                            'base_uri' => $endpoint->getEndpoint() . '/api/',
                                            'timeout' => self::DEFAULT_TIMEOUT,
                                        ]);
