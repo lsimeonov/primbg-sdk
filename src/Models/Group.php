@@ -3,13 +3,13 @@
 namespace Stellion\Primbg\Models;
 
 
-use Illuminate\Support\Str;
 use Stellion\Primbg\Interfaces\Arrayable;
-use Stellion\Primbg\Traits\ArrayableTrait;
+use Stellion\Primbg\Models\Traits\ArrayableTrait;
+use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
 class Group implements Arrayable
 {
-    use ArrayableTrait;
+    use ArrayableTrait, FromArrayTrait;
 
     /**
      * @var int|null
@@ -24,7 +24,7 @@ class Group implements Arrayable
      */
     private $name;
     /**
-     * @var string|null
+     * @var int|null
      */
     private $id;
     /**
@@ -32,27 +32,28 @@ class Group implements Arrayable
      */
     private $parentName;
     /**
-     * @var string
+     * @var string|null
      */
     private $code;
-
     /**
      * @var string
      */
     private $taxInstanceName;
 
     /**
+     * @var array|string[]
+     */
+    private array $castMap = [
+        'code' => 'string'
+    ];
+
+    /**
      * Group constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
-        foreach ($attributes as $k => $v) {
-            $setter = 'set' . ucfirst(Str::camel($k));
-            if (method_exists($this, $setter)) {
-                $this->$setter($v);
-            }
-        }
+       $this->fromArray($attributes);
     }
 
     /**
@@ -104,17 +105,17 @@ class Group implements Arrayable
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getId(): ?string
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param string|null $id
+     * @param int|null $id
      */
-    public function setId(?string $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
@@ -136,33 +137,33 @@ class Group implements Arrayable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
     /**
-     * @param string $code
+     * @param string|null $code
      */
-    public function setCode(string $code): void
+    public function setCode(?string $code): void
     {
         $this->code = $code;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTaxInstanceName(): string
+    public function getTaxInstanceName(): ?string
     {
         return $this->taxInstanceName;
     }
 
     /**
-     * @param string $taxInstanceName
+     * @param string|null $taxInstanceName
      */
-    public function setTaxInstanceName(string $taxInstanceName): void
+    public function setTaxInstanceName(?string $taxInstanceName): void
     {
         $this->taxInstanceName = $taxInstanceName;
     }
