@@ -43,7 +43,7 @@ class Group implements Arrayable
     /**
      * @var array|string[]
      */
-    private array $castMap = [
+    private $castMap = [
         'code' => 'string'
     ];
 

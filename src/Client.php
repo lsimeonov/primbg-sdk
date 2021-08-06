@@ -154,7 +154,7 @@ class Client
             return new EmptyGroup();
         }
 
-        return new Group($body['data']['results'][0]);
+        return new Group($body['data']['result'][0]);
     }
 
     /**
