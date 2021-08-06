@@ -15,7 +15,9 @@ trait FromArrayTrait
     {
         foreach ($array as $k => $v) {
             $setter = 'set' . ucfirst(Str::camel($k));
-
+            if($v === '__NULL__'){
+                $v = null;
+            }
             if (method_exists($this, $setter)) {
                 $value = $v;
                 if (isset($this->objectConvertMap[$k])) {

@@ -89,23 +89,21 @@ class Client
         if (!$group->getId()) {
             throw new UnexpectedEntity('Group id is missing');
         }
-        $payload = array_filter(Arr::only(
-            $group->toArray(),
-            [
-                'name',
-                'code',
-                'parent_name',
-                'id',
-                'tax_instance_name'
-            ]));
-        $body = $this->request('RPC.common.RestApi.editGroup', [
+        $payload = [
+            'data' => [array_filter(Arr::only(
+                $group->toArray(),
+                [
+                    'name',
+                    'code',
+                    'parent_name',
+                    'id',
+                    'tax_instance_name'
+                ]))]];
+        $body = $this->request('RPC.common.Api.Groups.set', [
             'json' => $payload,
         ]);
 
-        $newGroup = clone $group;
-        $newGroup->setId($body['data']['group_id']);
-
-        return $newGroup;
+        return new Group($body['data']['result'][0]);
 
     }
 
@@ -122,23 +120,21 @@ class Client
         if ($group->getId()) {
             throw new UnexpectedEntity('Group id is loaded');
         }
-        $payload = array_filter(Arr::only(
-            $group->toArray(),
-            [
-                'name',
-                'code',
-                'parent_name',
-                'tax_instance_name'
-            ]));
+        $payload = [
+            'data' => [array_filter(Arr::only(
+                $group->toArray(),
+                [
+                    'name',
+                    'code',
+                    'parent_name',
+                    'tax_instance_name'
+                ]))]];
 
         $body = $this->request('RPC.common.Api.Groups.set', [
             'json' => $payload,
         ]);
 
-        $newGroup = clone $group;
-        $newGroup->setId($body['data']['group_id']);
-
-        return $newGroup;
+        return new Group($body['data']['result'][0]);
     }
 
     /**
