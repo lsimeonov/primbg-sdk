@@ -14,9 +14,17 @@
         "guzzlehttp/guzzle": "~6.0",
         "laravel/helpers": "^1.2"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5.19"
+    },
     "autoload": {
         "psr-4": {
             "Stellion\\Primbg\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stellion\\Test\\Primbg\\": "tests/"
         }
     }
 }

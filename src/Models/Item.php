@@ -5,6 +5,7 @@ namespace Stellion\Primbg\Models;
 
 
 use Stellion\Primbg\Interfaces\Arrayable;
+use Stellion\Primbg\Models\Item\Status;
 use Stellion\Primbg\Models\Item\Type;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
@@ -34,7 +35,7 @@ class Item implements Arrayable
     private $status;
 
     /**
-     * @var string
+     * @var string|array
      */
     private $description;
 
@@ -64,16 +65,25 @@ class Item implements Arrayable
     private $group;
 
     /**
+     * @var \Stellion\Primbg\Models\Measure[]|null
+     */
+    private $measures;
+
+    /**
      * @var string[]
      */
     protected array $objectConvertMap = [
         'brand' => Brand::class,
         'group' => Group::class,
-        'tp' => Type::class
+        'tp' => Type::class,
+        'measures' => Measure::class,
+        'status' => Status::class
     ];
 
     protected array $castMap = [
-        'code' => 'string'
+        'code' => 'string',
+        'expense' => 'bool',
+        'income' => 'bool'
     ];
 
     /**
@@ -150,17 +160,17 @@ class Item implements Arrayable
     }
 
     /**
-     * @return string
+     * @return string|array
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description ?? '';
     }
 
     /**
-     * @param string $description
+     * @param string|array $description
      */
-    public function setDescription(string $description): void
+    public function setDescription($description): void
     {
         $this->description = $description;
     }
@@ -243,5 +253,21 @@ class Item implements Arrayable
     public function setGroup(?Group $group): void
     {
         $this->group = $group;
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Measure[]
+     */
+    public function getMeasures(): ?array
+    {
+        return $this->measures;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Measure[] $measures
+     */
+    public function setMeasures(?array $measures): void
+    {
+        $this->measures = $measures;
     }
 }

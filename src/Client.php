@@ -13,9 +13,15 @@ use Stellion\Primbg\Exceptions\Http\HttpBadResponse;
 use Stellion\Primbg\Exceptions\UnexpectedEntity;
 use Stellion\Primbg\Interfaces\Arrayable;
 use Stellion\Primbg\Models\Brand;
+use Stellion\Primbg\Models\Delivery\DeliveryType;
 use Stellion\Primbg\Models\EmptyGroup;
 use Stellion\Primbg\Models\Group;
 use Stellion\Primbg\Models\Item;
+use Stellion\Primbg\Models\Order;
+use Stellion\Primbg\Models\Partner;
+use Stellion\Primbg\Models\PaymentType;
+use Stellion\Primbg\Models\Pos;
+use Stellion\Primbg\Models\SaleType;
 use Stellion\Primbg\ValueObjects\Endpoint;
 use Stellion\Primbg\ValueObjects\Token;
 
@@ -222,7 +228,7 @@ class Client
 
     /**
      * @param \Stellion\Primbg\Models\Brand $brand
-     * @return array
+     * @return \Stellion\Primbg\Models\Brand|null
      * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
      */
     public function findBrand(Brand $brand): ?Brand
@@ -261,6 +267,181 @@ class Client
     }
 
     /**
+     * @param \Stellion\Primbg\Models\Item $item
+     * @return \Stellion\Primbg\Models\Item
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function createItem(Item $item): Item
+    {
+        $payload = $this->prepareEntityForPayload($item);
+
+        $body = $this->request('RPC.common.Api.Items.set', [
+            'json' => $payload
+        ]);
+
+        return new Item($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Item $item
+     * @return \Stellion\Primbg\Models\Item
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     * @throws \Stellion\Primbg\Exceptions\UnexpectedEntity
+     */
+    public function updateItem(Item $item): Item
+    {
+        if (!$item->getId()) {
+            throw new UnexpectedEntity('Item id is missing');
+        }
+        $payload = $this->prepareEntityForPayload($item);
+
+        $body = $this->request('RPC.common.Api.Items.set', [
+            'json' => $payload
+        ]);
+
+        return new Item($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Pos[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function allPOS()
+    {
+        $body = $this->request('RPC.common.Api.Pos.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new Pos($response);
+        }, $body['data']['result']);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Partner $partner
+     * @return \Stellion\Primbg\Models\Partner|null
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function findPartner(Partner $partner): ?Partner
+    {
+        $payload = $this->prepareEntityForPayload($partner);
+
+        try {
+            $body = $this->request('RPC.common.Api.Partners.get', [
+                'json' => $payload,
+            ]);
+        } catch (ErrorResponseException $e) {
+            return new Partner();
+        }
+
+        return new Partner($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Item $item
+     * @return \Stellion\Primbg\Models\Item
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function createPartner(Partner $item): Partner
+    {
+        $payload = $this->prepareEntityForPayload($item);
+
+        $body = $this->request('RPC.common.Api.Partners.set', [
+            'json' => $payload
+        ]);
+
+        return new Partner($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Partner $partner
+     * @return \Stellion\Primbg\Models\Partner
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     * @throws \Stellion\Primbg\Exceptions\UnexpectedEntity
+     */
+    public function updatePartner(Partner $partner)
+    {
+        if (!$partner->getId()) {
+            throw new UnexpectedEntity('Partner id is missing');
+        }
+        $payload = $this->prepareEntityForPayload($partner);
+
+        $body = $this->request('RPC.common.Api.Partners.set', [
+            'json' => $payload
+        ]);
+
+        return new Partner($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\SaleType[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function allSaleTypes(): array
+    {
+        $body = $this->request('RPC.common.Api.SoOrderTypes.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new SaleType($response);
+        }, $body['data']['result']);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Order $order
+     * @return \Stellion\Primbg\Models\Order
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function createSaleOrder(Order $order): Order
+    {
+        $payload = $this->prepareEntityForPayload($order);
+
+        $body = $this->request('RPC.common.Api.So.set', [
+            'json' => $payload
+        ]);
+
+        return new Order($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Delivery\DeliveryType[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getDeliveryTypes(): array
+    {
+        $body = $this->request('RPC.common.Api.DeliveryTypes.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new DeliveryType($response);
+        }, $body['data']['result']);
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\PaymentType[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getPaymentTypes(): array
+    {
+        $body = $this->request('RPC.common.Api.PayTypes.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new PaymentType($response);
+        }, $body['data']['result']);
+    }
+
+    /**
      * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @return array
@@ -288,7 +469,9 @@ class Client
      */
     private function prepareEntityForPayload(Arrayable $entity): array
     {
-        return ['data' => [array_filter($entity->toArray())]];
+        return ['data' => [array_filter($entity->toArray(), function ($item) {
+            return $item !== null;
+        })]];
     }
 
     /**

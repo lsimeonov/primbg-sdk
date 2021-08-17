@@ -11,6 +11,9 @@ class Status
     const STATUS_WORK = 'work';
     const STATUS_ARCHIVE = 'archive';
 
+    /**
+     * @var string[]
+     */
     private $statuses = [
         self::STATUS_WORK,
         self::STATUS_ARCHIVE
@@ -36,5 +39,13 @@ class Status
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->status ?? '';
     }
 }
