@@ -59,10 +59,36 @@ class Measure implements Arrayable
     private $siLabel;
 
     /**
+     * @var float|null
+     */
+    private $H;
+    /**
+     * @var float|null
+     */
+    private $W;
+    /**
+     * @var float|null
+     */
+    private $L;
+    /**
+     * @var float|null
+     */
+    private $weight;
+    /**
+     * @var float|null
+     */
+    private $gross;
+
+    /**
      * @var string[]
      */
     protected $castMap = [
-        'is_weight' => 'bool'
+        'is_weight' => 'bool',
+        'H' => 'float',
+        'W' => 'float',
+        'L' => 'float',
+        'weight' => 'float',
+        'gross' => 'float'
     ];
 
     /**
@@ -215,5 +241,85 @@ class Measure implements Arrayable
     public function setSiLabel(?string $siLabel): void
     {
         $this->siLabel = $siLabel;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getH(): ?float
+    {
+        return $this->H;
+    }
+
+    /**
+     * @param float|null $H
+     */
+    public function setH(?float $H): void
+    {
+        $this->H = $H;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getW(): ?float
+    {
+        return $this->W;
+    }
+
+    /**
+     * @param float|null $W
+     */
+    public function setW(?float $W): void
+    {
+        $this->W = $W;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getL(): ?float
+    {
+        return $this->L;
+    }
+
+    /**
+     * @param float|null $L
+     */
+    public function setL(?float $L): void
+    {
+        $this->L = $L;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param float|null $weight
+     */
+    public function setWeight(?float $weight): void
+    {
+        $this->weight = $weight;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getGross(): ?float
+    {
+        return $this->gross;
+    }
+
+    /**
+     * @param float|null $gross
+     */
+    public function setGross(?float $gross): void
+    {
+        $this->gross = $gross;
     }
 }
