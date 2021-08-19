@@ -6,7 +6,6 @@ namespace Stellion\Primbg;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
 use Stellion\Primbg\Exceptions\ErrorResponseException;
 use Stellion\Primbg\Exceptions\Http\HttpBadResponse;
@@ -95,22 +94,13 @@ class Client
         if (!$group->getId()) {
             throw new UnexpectedEntity('Group id is missing');
         }
-        $payload = [
-            'data' => [array_filter(Arr::only(
-                $group->toArray(),
-                [
-                    'name',
-                    'code',
-                    'parent_name',
-                    'id',
-                    'tax_instance_name'
-                ]))]];
+        $payload = $this->prepareEntityForPayload($group);
+
         $body = $this->request('RPC.common.Api.Groups.set', [
             'json' => $payload,
         ]);
 
         return new Group($body['data']['result'][0]);
-
     }
 
     /**
@@ -126,15 +116,7 @@ class Client
         if ($group->getId()) {
             throw new UnexpectedEntity('Group id is loaded');
         }
-        $payload = [
-            'data' => [array_filter(Arr::only(
-                $group->toArray(),
-                [
-                    'name',
-                    'code',
-                    'parent_name',
-                    'tax_instance_name'
-                ]))]];
+        $payload = $this->prepareEntityForPayload($group);
 
         $body = $this->request('RPC.common.Api.Groups.set', [
             'json' => $payload,
