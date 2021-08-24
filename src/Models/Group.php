@@ -41,10 +41,22 @@ class Group implements Arrayable
     private $taxInstanceName;
 
     /**
+     * @var int|null
+     */
+    private $expenseAllocationId;
+
+    /**
+     * @var int|null
+     */
+    private $incomeAllocationId;
+
+    /**
      * @var array|string[]
      */
     private $castMap = [
-        'code' => 'string'
+        'code' => 'string',
+        'expense_allocation_id' => 'int',
+        'income_allocation_id' => 'int'
     ];
 
     /**
@@ -53,7 +65,7 @@ class Group implements Arrayable
      */
     public function __construct(array $attributes = [])
     {
-       $this->fromArray($attributes);
+        $this->fromArray($attributes);
     }
 
     /**
@@ -166,5 +178,37 @@ class Group implements Arrayable
     public function setTaxInstanceName(?string $taxInstanceName): void
     {
         $this->taxInstanceName = $taxInstanceName;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getExpenseAllocationId(): ?int
+    {
+        return $this->expenseAllocationId;
+    }
+
+    /**
+     * @param int|null $expenseAllocationId
+     */
+    public function setExpenseAllocationId(?int $expenseAllocationId): void
+    {
+        $this->expenseAllocationId = $expenseAllocationId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getIncomeAllocationId(): ?int
+    {
+        return $this->incomeAllocationId;
+    }
+
+    /**
+     * @param int|null $incomeAllocationId
+     */
+    public function setIncomeAllocationId(?int $incomeAllocationId): void
+    {
+        $this->incomeAllocationId = $incomeAllocationId;
     }
 }
