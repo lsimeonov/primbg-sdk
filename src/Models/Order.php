@@ -122,6 +122,11 @@ class Order implements Arrayable
     private $rows;
 
     /**
+     * @var bool|null
+     */
+    private $createRequest;
+
+    /**
      * @todo
      */
     private $integrations;
@@ -516,5 +521,21 @@ class Order implements Arrayable
     public function setIntegrations($integrations): void
     {
         $this->integrations = $integrations;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getCreateRequest(): ?bool
+    {
+        return $this->createRequest;
+    }
+
+    /**
+     * @param bool|null $createRequest
+     */
+    public function setCreateRequest(?bool $createRequest): void
+    {
+        $this->createRequest = $createRequest;
     }
 }

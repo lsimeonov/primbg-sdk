@@ -20,6 +20,8 @@ use Stellion\Primbg\Models\Order;
 use Stellion\Primbg\Models\Partner;
 use Stellion\Primbg\Models\PaymentType;
 use Stellion\Primbg\Models\Pos;
+use Stellion\Primbg\Models\Price;
+use Stellion\Primbg\Models\PriceList;
 use Stellion\Primbg\Models\SaleType;
 use Stellion\Primbg\ValueObjects\Endpoint;
 use Stellion\Primbg\ValueObjects\Token;
@@ -421,6 +423,67 @@ class Client
         return array_map(function ($response) {
             return new PaymentType($response);
         }, $body['data']['result']);
+    }
+
+    /**
+     * @return PriceList[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getPriceLists(): array
+    {
+        $body = $this->request('RPC.common.Api.PricesLists.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new PriceList($response);
+        }, $body['data']['result']);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Price $price
+     * @return \Stellion\Primbg\Models\Price
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse|\Stellion\Primbg\Exceptions\UnexpectedEntity
+     */
+    public function findPrice(Price $price): Price
+    {
+        if (!$price->getPricelistCode()) {
+            throw new UnexpectedEntity('Missing price list code for getPrice request');
+        }
+
+        $payload = $this->prepareEntityForPayload($price);
+
+        $body = $this->request('RPC.common.Api.Prices.get', [
+            'json' => $payload
+        ]);
+
+        return new Price($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Price $price
+     * @return \Stellion\Primbg\Models\Price
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function createOrUpdatePrice(Price $price): Price
+    {
+
+        $oldPrice = $this->findPrice($price);
+
+        if ($oldPrice->getPrice() === $price->getPrice()) {
+            return $oldPrice;
+        }
+
+        $payload = $this->prepareEntityForPayload($price);
+
+        $body = $this->request('RPC.common.Api.Prices.set', [
+            'json' => $payload
+        ]);
+
+        return new Price($body['data']['result'][0] ?? []);
     }
 
     /**
