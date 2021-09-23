@@ -470,8 +470,11 @@ class Client
      */
     public function createOrUpdatePrice(Price $price): Price
     {
-
-        $oldPrice = $this->findPrice($price);
+        try {
+            $oldPrice = $this->findPrice($price);
+        } catch (ErrorResponseException $e) {
+            $oldPrice = new Price();
+        }
 
         if ($oldPrice->getPrice() === $price->getPrice()) {
             return $oldPrice;
