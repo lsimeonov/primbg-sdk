@@ -6,6 +6,7 @@ namespace Stellion\Primbg\Models;
 
 use Stellion\Primbg\Interfaces\Arrayable;
 use Stellion\Primbg\Models\Item\Status;
+use Stellion\Primbg\Models\Item\Supplier;
 use Stellion\Primbg\Models\Item\Type;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
@@ -70,6 +71,11 @@ class Item implements Arrayable
     private $measures;
 
     /**
+     * @var \Stellion\Primbg\Models\Item\Supplier|null
+     */
+    private $supplier;
+
+    /**
      * @var string[]
      */
     protected array $objectConvertMap = [
@@ -77,7 +83,8 @@ class Item implements Arrayable
         'group' => Group::class,
         'tp' => Type::class,
         'measures' => Measure::class,
-        'status' => Status::class
+        'status' => Status::class,
+        'supplier' => Supplier::class
     ];
 
     protected array $castMap = [
@@ -269,5 +276,21 @@ class Item implements Arrayable
     public function setMeasures(?array $measures): void
     {
         $this->measures = $measures;
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Item\Supplier|null
+     */
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Item\Supplier|null $supplier
+     */
+    public function setSupplier(?Supplier $supplier): void
+    {
+        $this->supplier = $supplier;
     }
 }
