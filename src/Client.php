@@ -24,6 +24,7 @@ use Stellion\Primbg\Models\Pos;
 use Stellion\Primbg\Models\Price;
 use Stellion\Primbg\Models\PriceList;
 use Stellion\Primbg\Models\SaleType;
+use Stellion\Primbg\Models\Service;
 use Stellion\Primbg\ValueObjects\Endpoint;
 use Stellion\Primbg\ValueObjects\Token;
 
@@ -56,9 +57,9 @@ class Client
     {
         $this->token = $token;
         $this->httpClient = new HttpClient([
-                                               'base_uri' => $endpoint->getEndpoint() . '/api/',
-                                               'timeout' => self::DEFAULT_TIMEOUT,
-                                           ]);
+            'base_uri' => $endpoint->getEndpoint() . '/api/',
+            'timeout' => self::DEFAULT_TIMEOUT,
+        ]);
     }
 
 
@@ -513,6 +514,22 @@ class Client
         ]);
 
         return new Price($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Service[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getServices(): array
+    {
+        $body = $this->request('RPC.common.Api.Services.get', [
+            'json' => ['get_all' => '1']
+        ]);
+
+        return array_map(function ($response) {
+            return new Service($response);
+        }, $body['data']['result']);
     }
 
     /**
