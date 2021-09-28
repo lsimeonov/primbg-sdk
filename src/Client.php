@@ -17,6 +17,7 @@ use Stellion\Primbg\Models\EmptyGroup;
 use Stellion\Primbg\Models\Group;
 use Stellion\Primbg\Models\Item;
 use Stellion\Primbg\Models\Order;
+use Stellion\Primbg\Models\Order\OrderResult;
 use Stellion\Primbg\Models\Partner;
 use Stellion\Primbg\Models\PaymentType;
 use Stellion\Primbg\Models\Pos;
@@ -55,9 +56,9 @@ class Client
     {
         $this->token = $token;
         $this->httpClient = new HttpClient([
-            'base_uri' => $endpoint->getEndpoint() . '/api/',
-            'timeout' => self::DEFAULT_TIMEOUT,
-        ]);
+                                               'base_uri' => $endpoint->getEndpoint() . '/api/',
+                                               'timeout' => self::DEFAULT_TIMEOUT,
+                                           ]);
     }
 
 
@@ -391,6 +392,31 @@ class Client
         ]);
 
         return new Order($body['data']['result'][0] ?? []);
+    }
+
+    /**
+     * @param \DateTimeInterface[] $dateTimes
+     * @return \Stellion\Primbg\Models\Order\OrderResult[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getSaleOrders(array $dateTimes): array
+    {
+        $payload['data'] = [];
+
+        foreach ($dateTimes as $dateTime) {
+            $payload['data'][] = [
+                'for_date' => $dateTime->format('Y-m-d')
+            ];
+        }
+
+        $body = $this->request('RPC.common.Api.So.get', [
+            'json' => $payload
+        ]);
+
+        return array_map(function ($response) {
+            return new OrderResult($response);
+        }, $body['data']['result']);
     }
 
     /**
