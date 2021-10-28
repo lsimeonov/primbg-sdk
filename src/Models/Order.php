@@ -4,14 +4,16 @@ declare(strict_types=1);
 namespace Stellion\Primbg\Models;
 
 
+use Carbon\Carbon;
 use Stellion\Primbg\Interfaces\Arrayable;
+use Stellion\Primbg\Models\Order\Row;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
 class Order implements Arrayable
 {
-    use ArrayableTrait,
-        FromArrayTrait;
+    use ArrayableTrait;
+    use FromArrayTrait;
 
     /**
      * @var int|null
@@ -112,7 +114,12 @@ class Order implements Arrayable
     private $partner;
 
     /**
-     * @var \Stellion\Primbg\Models\Address
+     * @var \Stellion\Primbg\Models\Partner[]|null
+     */
+    private $partners;
+
+    /**
+     * @var \Stellion\Primbg\Models\Address|null
      */
     private $deliveryAddress;
 
@@ -132,18 +139,35 @@ class Order implements Arrayable
     private $integrations;
 
     /**
+     * @var string|null
+     */
+    private $senderNm;
+
+    /**
+     * @var string|null
+     */
+    private $payTypeNm;
+
+    /**
+     * @var string|null
+     */
+    private $actionName;
+
+    /**
      * @var string[]
      */
     protected $objectConvertMap = [
-        'deliveryAddress' => Address::class
+        'delivery_address' => Address::class,
+        'rows' => Row::class,
+        'partners' => Partner::class
     ];
 
     /**
      * @var string[]
      */
     protected $castMap = [
-        'invoiceNow' => 'bool',
-        'buyNow' => 'bool'
+        'invoice_now' => 'bool',
+        'buy_now' => 'bool',
     ];
 
     /**
@@ -180,11 +204,11 @@ class Order implements Arrayable
     }
 
     /**
-     * @param \DateTimeInterface|null $forDate
+     * @param \DateTimeInterface|string|null $forDate
      */
-    public function setForDate(?\DateTimeInterface $forDate): void
+    public function setForDate($forDate): void
     {
-        $this->forDate = $forDate;
+        $this->forDate = Carbon::parse($forDate);
     }
 
     /**
@@ -478,15 +502,15 @@ class Order implements Arrayable
     /**
      * @return \Stellion\Primbg\Models\Address
      */
-    public function getDeliveryAddress(): Address
+    public function getDeliveryAddress(): ?Address
     {
         return $this->deliveryAddress;
     }
 
     /**
-     * @param \Stellion\Primbg\Models\Address $deliveryAddress
+     * @param \Stellion\Primbg\Models\Address|null $deliveryAddress
      */
-    public function setDeliveryAddress(Address $deliveryAddress): void
+    public function setDeliveryAddress(?Address $deliveryAddress): void
     {
         $this->deliveryAddress = $deliveryAddress;
     }
@@ -537,5 +561,72 @@ class Order implements Arrayable
     public function setCreateRequest(?bool $createRequest): void
     {
         $this->createRequest = $createRequest;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSenderNm(): ?string
+    {
+        return $this->senderNm;
+    }
+
+    /**
+     * @param string|null $senderNm
+     */
+    public function setSenderNm(?string $senderNm): void
+    {
+        $this->senderNm = $senderNm;
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Partner[]|null
+     */
+    public function getPartners(): ?array
+    {
+        return $this->partners;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Partner[]|null $partners
+     */
+    public function setPartners($partners): void
+    {
+        if (!is_array($partners)) {
+            $partners = [$partners];
+        }
+        $this->partners = $partners;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPayTypeNm(): ?string
+    {
+        return $this->payTypeNm;
+    }
+
+    /**
+     * @param string|null $payTypeNm
+     */
+    public function setPayTypeNm(?string $payTypeNm): void
+    {
+        $this->payTypeNm = $payTypeNm;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getActionName(): ?string
+    {
+        return $this->actionName;
+    }
+
+    /**
+     * @param string|null $actionName
+     */
+    public function setActionName(?string $actionName): void
+    {
+        $this->actionName = $actionName;
     }
 }

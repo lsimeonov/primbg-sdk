@@ -97,11 +97,23 @@ class Address implements Arrayable, AllowNullIdInterface
      */
     private $zipNum;
 
+    protected array $castMap = [
+        'zip' => 'string',
+        'building' => 'string',
+        'num' => 'string',
+        'zip_num' => 'string',
+        'address' => 'string',
+        'street' => 'string',
+        'nbh' => 'string',
+        'phone' => 'string'
+    ];
+
     /**
      * DeliveryAddress constructor.
      * @param array $attributes
      */
-    public function __construct(array $attributes = []){
+    public function __construct(array $attributes = [])
+    {
         $this->fromArray($attributes);
     }
 

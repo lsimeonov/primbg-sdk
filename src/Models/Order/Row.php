@@ -8,10 +8,11 @@ use Stellion\Primbg\Interfaces\Arrayable;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
+
 class Row implements Arrayable
 {
-    use ArrayableTrait,
-        FromArrayTrait;
+    use ArrayableTrait;
+    use FromArrayTrait;
 
     /**
      * @var string|null
@@ -45,16 +46,44 @@ class Row implements Arrayable
     /**
      * @var float|null
      */
-    private $price;
-
+    private $totalPrice;
     /**
-     * @var int|null
+     * @var float|null
+     */
+    private $totalPriceWithTaxes;
+    /**
+     * @var float|null
+     */
+    private $singlePriceBeforeDiscounts;
+    /**
+     * @var float|null
+     */
+    private $taxes;
+    /**
+     * @var float|null
      */
     private $discount;
     /**
      * @var string|null
      */
     private $description;
+
+    /**
+     * @var string|null
+     */
+    private $categoryName;
+    /**
+     * @var string[]
+     */
+    protected array $castMap = [
+        'sku' => 'string',
+        'taxes' => 'float',
+        'total_price' => 'float',
+        'total_price_with_taxes' => 'float',
+        'single_price_before_discounts' => 'float',
+        'discount' => 'float',
+        'quantity' => 'float'
+    ];
 
     /**
      * Row constructor.
@@ -164,31 +193,31 @@ class Row implements Arrayable
     /**
      * @return float|null
      */
-    public function getPrice(): ?float
+    public function getTotalPrice(): ?float
     {
-        return $this->price;
+        return $this->totalPrice;
     }
 
     /**
-     * @param float|null $price
+     * @param float|null $totalPrice
      */
-    public function setPrice(?float $price): void
+    public function setTotalPrice(?float $totalPrice): void
     {
-        $this->price = $price;
+        $this->totalPrice = $totalPrice;
     }
 
     /**
-     * @return int|null
+     * @return float|null
      */
-    public function getDiscount(): ?int
+    public function getDiscount(): ?float
     {
         return $this->discount;
     }
 
     /**
-     * @param int|null $discount
+     * @param float|null $discount
      */
-    public function setDiscount(?int $discount): void
+    public function setDiscount(?float $discount): void
     {
         $this->discount = $discount;
     }
@@ -208,4 +237,69 @@ class Row implements Arrayable
     {
         $this->description = $description;
     }
+
+    /**
+     * @return float|null
+     */
+    public function getTaxes(): ?float
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param float|null $taxes
+     */
+    public function setTaxes(?float $taxes): void
+    {
+        $this->taxes = $taxes;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getTotalPriceWithTaxes(): ?float
+    {
+        return $this->totalPriceWithTaxes;
+    }
+
+    /**
+     * @param float|null $totalPriceWithTaxes
+     */
+    public function setTotalPriceWithTaxes(?float $totalPriceWithTaxes): void
+    {
+        $this->totalPriceWithTaxes = $totalPriceWithTaxes;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getSinglePriceBeforeDiscounts(): ?float
+    {
+        return $this->singlePriceBeforeDiscounts;
+    }
+
+    /**
+     * @param float|null $singlePriceBeforeDiscounts
+     */
+    public function setSinglePriceBeforeDiscounts(?float $singlePriceBeforeDiscounts): void
+    {
+        $this->singlePriceBeforeDiscounts = $singlePriceBeforeDiscounts;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCategoryName(): ?string
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * @param string|null $categoryName
+     */
+    public function setCategoryName(?string $categoryName): void
+    {
+        $this->categoryName = $categoryName;
+    }
+
 }

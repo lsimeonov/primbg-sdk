@@ -112,7 +112,8 @@ class Partner implements Arrayable
         'is_foreign' => 'bool',
         'archive' => 'bool',
         'dds_num' => 'string',
-        'phone' => 'string'
+        'phone' => 'string',
+        'eik' => 'string'
     ];
 
     /**
@@ -189,6 +190,14 @@ class Partner implements Arrayable
     }
 
     /**
+     * @param string|null $name
+     */
+    public function setNm(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
      * @return string|null
      */
     public function getEik(): ?string
@@ -248,6 +257,22 @@ class Partner implements Arrayable
      * @param string|null $email
      */
     public function setEmail(?string $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setMail(?string $email): void
     {
         $this->email = $email;
     }
@@ -424,7 +449,8 @@ class Partner implements Arrayable
     /**
      * @return bool|null
      */
-    public function isArchived(){
+    public function isArchived()
+    {
         return $this->archive;
     }
 

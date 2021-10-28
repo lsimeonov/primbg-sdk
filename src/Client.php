@@ -25,6 +25,7 @@ use Stellion\Primbg\Models\Price;
 use Stellion\Primbg\Models\PriceList;
 use Stellion\Primbg\Models\SaleType;
 use Stellion\Primbg\Models\Service;
+use Stellion\Primbg\Requests\SaleOrdersRequest;
 use Stellion\Primbg\ValueObjects\Endpoint;
 use Stellion\Primbg\ValueObjects\Token;
 
@@ -57,9 +58,9 @@ class Client
     {
         $this->token = $token;
         $this->httpClient = new HttpClient([
-            'base_uri' => $endpoint->getEndpoint() . '/api/',
-            'timeout' => self::DEFAULT_TIMEOUT,
-        ]);
+                                               'base_uri' => $endpoint->getEndpoint() . '/api/',
+                                               'timeout' => self::DEFAULT_TIMEOUT,
+                                           ]);
     }
 
 
@@ -418,6 +419,33 @@ class Client
         return array_map(function ($response) {
             return new OrderResult($response);
         }, $body['data']['result']);
+    }
+
+
+    /**
+     * @param \Stellion\Primbg\Requests\SaleOrdersRequest $request
+     * @return \Stellion\Primbg\Models\Order[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getSingleSaleOrdersCollection(SaleOrdersRequest $request): array
+    {
+        $orders = [];
+        $payloads = $request->getPayload();
+
+        foreach ($payloads as $payload) {
+            $body = $this->request('RPC.common.Api.So.getOneData', [
+                'json' => [
+                    'data' => [$payload]
+                ]
+            ]);
+            if (isset($body['data']['result'][0])) {
+                $orders[] = new Order($body['data']['result'][0] ?? []);
+            }
+        }
+
+
+        return $orders;
     }
 
     /**

@@ -11,6 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "ext-json": "*",
         "guzzlehttp/guzzle": "~6.0",
         "laravel/helpers": "^1.2"
     },
