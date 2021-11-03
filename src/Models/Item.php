@@ -26,7 +26,7 @@ class Item implements Arrayable
     private $sku;
 
     /**
-     * @var string|string[]
+     * @var string|string[]|null
      */
     private $name;
 
@@ -90,7 +90,8 @@ class Item implements Arrayable
     protected array $castMap = [
         'code' => 'string',
         'expense' => 'bool',
-        'income' => 'bool'
+        'income' => 'bool',
+        'sku' => 'string'
     ];
 
     /**

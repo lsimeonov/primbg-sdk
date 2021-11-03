@@ -97,12 +97,18 @@ class Address implements Arrayable, AllowNullIdInterface
      */
     private $zipNum;
 
+    /**
+     * @var string|null
+     */
+    private $fullAddress;
+
     protected array $castMap = [
         'zip' => 'string',
         'building' => 'string',
         'num' => 'string',
         'zip_num' => 'string',
         'address' => 'string',
+        'full_address' => 'string',
         'street' => 'string',
         'nbh' => 'string',
         'phone' => 'string'
@@ -371,5 +377,21 @@ class Address implements Arrayable, AllowNullIdInterface
     public function setZipNum(?string $zipNum): void
     {
         $this->zipNum = $zipNum;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFullAddress(): ?string
+    {
+        return $this->fullAddress;
+    }
+
+    /**
+     * @param string|null $fullAddress
+     */
+    public function setFullAddress(?string $fullAddress): void
+    {
+        $this->fullAddress = $fullAddress;
     }
 }

@@ -67,7 +67,10 @@ class Row implements Arrayable
      * @var string|null
      */
     private $description;
-
+    /**
+     * @var string|null
+     */
+    private $label;
     /**
      * @var string|null
      */
@@ -300,6 +303,22 @@ class Row implements Arrayable
     public function setCategoryName(?string $categoryName): void
     {
         $this->categoryName = $categoryName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string|null $label
+     */
+    public function setLabel(?string $label): void
+    {
+        $this->label = $label;
     }
 
 }
