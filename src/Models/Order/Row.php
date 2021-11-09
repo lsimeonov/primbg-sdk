@@ -56,6 +56,11 @@ class Row implements Arrayable
      */
     private $singlePriceBeforeDiscounts;
     /**
+     * Unfortunately the entities have different props on different responses.
+     * @var float|null
+     */
+    private $price;
+    /**
      * @var float|null
      */
     private $taxes;
@@ -319,6 +324,22 @@ class Row implements Arrayable
     public function setLabel(?string $label): void
     {
         $this->label = $label;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param float|null $price
+     */
+    public function setPrice(?float $price): void
+    {
+        $this->price = $price;
     }
 
 }
