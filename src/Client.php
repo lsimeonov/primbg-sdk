@@ -58,9 +58,9 @@ class Client
     {
         $this->token = $token;
         $this->httpClient = new HttpClient([
-                                               'base_uri' => $endpoint->getEndpoint() . '/api/',
-                                               'timeout' => self::DEFAULT_TIMEOUT,
-                                           ]);
+            'base_uri' => $endpoint->getEndpoint() . '/api/',
+            'timeout' => self::DEFAULT_TIMEOUT,
+        ]);
     }
 
 
@@ -421,6 +421,25 @@ class Client
         }, $body['data']['result']);
     }
 
+    /**
+     * @param \Stellion\Primbg\Models\Order $order
+     * @return \Stellion\Primbg\Models\Order
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function findSaleOrder(Order $order): Order
+    {
+        $payload = $this->prepareEntityForPayload($order);
+
+        try {
+            $body = $this->request('RPC.common.Api.So.getOneData', [
+                'json' => $payload,
+            ]);
+        } catch (ErrorResponseException $e) {
+            return new Order();
+        }
+
+        return new Order($body['data']['result'][0] ?? []);
+    }
 
     /**
      * @param \Stellion\Primbg\Requests\SaleOrdersRequest $request
@@ -444,8 +463,30 @@ class Client
             }
         }
 
-
         return $orders;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Order $order
+     * @param string $description
+     * @return array
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function completeCancelSaleOrder(Order $order, string $description = 'none'): array
+    {
+        if ($order->getNum()) {
+            return $this->request('RPC.common.Api.So.fullAnnulSo', [
+                'json' => [
+                    'data' => [[
+                        'num' => $order->getNum(),
+                        'annul_description' => $description
+                    ]]
+                ]
+            ]);
+        }
+
+        return [];
     }
 
     /**

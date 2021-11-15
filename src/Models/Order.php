@@ -520,7 +520,7 @@ class Order implements Arrayable
      */
     public function getRows(): array
     {
-        return $this->rows;
+        return $this->rows ?? [];
     }
 
     /**
