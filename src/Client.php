@@ -57,10 +57,12 @@ class Client
     public function __construct(Endpoint $endpoint, Token $token)
     {
         $this->token = $token;
-        $this->httpClient = new HttpClient([
-            'base_uri' => $endpoint->getEndpoint() . '/api/',
-            'timeout' => self::DEFAULT_TIMEOUT,
-        ]);
+        $this->httpClient = new HttpClient(
+            [
+                'base_uri' => $endpoint->getEndpoint() . '/api/',
+                'timeout' => self::DEFAULT_TIMEOUT,
+            ]
+        );
     }
 
 
@@ -487,6 +489,31 @@ class Client
         }
 
         return [];
+    }
+
+    /**
+     * @param \DateTimeInterface[] $dateTimes
+     * @return \Stellion\Primbg\Models\Order\OrderResult[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getPlacedOrders(array $dateTimes): array
+    {
+        $payload['data'] = [];
+
+        foreach ($dateTimes as $dateTime) {
+            $payload['data'][] = [
+                'for_date' => $dateTime->format('Y-m-d')
+            ];
+        }
+
+        $body = $this->request('RPC.common.Api.Po.get', [
+            'json' => $payload
+        ]);
+
+        return array_map(function ($response) {
+            return new Order\PlacedOrderResult($response);
+        }, $body['data']['result']);
     }
 
     /**

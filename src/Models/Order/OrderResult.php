@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Stellion\Primbg\Models\Order;
 
 use Stellion\Primbg\Interfaces\Arrayable;
+use Stellion\Primbg\Models\RelationalTransport;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
@@ -39,9 +40,16 @@ class OrderResult implements Arrayable
     private $forDateFormated;
 
     /**
-     * @var \Stellion\Primbg\Models\Order\Transaction[]|null
+     * @var \Stellion\Primbg\Models\RelationalTransport[]|null
      */
     private $relTrans;
+
+    /**
+     * @var string[]
+     */
+    protected $objectConvertMap = [
+        'rel_trans' => RelationalTransport::class
+    ];
 
     protected array $castMap = [
         'num' => 'string',
@@ -149,7 +157,7 @@ class OrderResult implements Arrayable
     }
 
     /**
-     * @return \Stellion\Primbg\Models\Order\Transaction[]|null
+     * @return \Stellion\Primbg\Models\RelationalTransport[]|null
      */
     public function getRelTrans(): ?array
     {
@@ -157,7 +165,7 @@ class OrderResult implements Arrayable
     }
 
     /**
-     * @param \Stellion\Primbg\Models\Order\Transaction[] $relTrans
+     * @param \Stellion\Primbg\Models\RelationalTransport[] $relTrans
      */
     public function setRelTrans(array $relTrans): void
     {
