@@ -9,7 +9,7 @@ use Stellion\Primbg\Models\RelationalTransport;
 use Stellion\Primbg\Models\Traits\ArrayableTrait;
 use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
-class PlacedOrderResult implements Arrayable
+class PurchaseOrderResult implements Arrayable
 {
     use ArrayableTrait;
     use FromArrayTrait;

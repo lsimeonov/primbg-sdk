@@ -492,12 +492,32 @@ class Client
     }
 
     /**
+     * @param \Stellion\Primbg\Models\Order\PurchaseOrder $purchaseOrder
+     * @return \Stellion\Primbg\Models\Order\PurchaseOrder
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function findPurchaseOrder(Order\PurchaseOrder $purchaseOrder): Order\PurchaseOrder
+    {
+        $payload = $this->prepareEntityForPayload($purchaseOrder);
+
+        try {
+            $body = $this->request('RPC.common.Api.Po.getOneData', [
+                'json' => $payload,
+            ]);
+        } catch (ErrorResponseException $e) {
+            return new Order\PurchaseOrder();
+        }
+
+        return new Order\PurchaseOrder($body['data']['result'][0] ?? []);
+    }
+
+    /**
      * @param \DateTimeInterface[] $dateTimes
      * @return \Stellion\Primbg\Models\Order\OrderResult[]
      * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
      * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
      */
-    public function getPlacedOrders(array $dateTimes): array
+    public function getPurchaseOrders(array $dateTimes): array
     {
         $payload['data'] = [];
 
@@ -512,8 +532,19 @@ class Client
         ]);
 
         return array_map(function ($response) {
-            return new Order\PlacedOrderResult($response);
+            return new Order\PurchaseOrderResult($response);
         }, $body['data']['result']);
+    }
+
+    /**
+     * @param array $dateTimes
+     * @return \Stellion\Primbg\Models\Order\OrderResult[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     * @deprecated User getPurchaseOrders instead
+     */
+    public function getPlacedOrders(array $dateTimes): array{
+        return $this->getPurchaseOrders($dateTimes);
     }
 
     /**
