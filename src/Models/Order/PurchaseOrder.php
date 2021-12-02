@@ -15,7 +15,7 @@ class PurchaseOrder implements Arrayable
     use ArrayableTrait;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $id;
     /**
@@ -109,11 +109,11 @@ class PurchaseOrder implements Arrayable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     /**
@@ -365,6 +365,7 @@ class PurchaseOrder implements Arrayable
     }
 
     /**
+     * Prim is keeping plural form for getting it. So we keep the same method name.
      * @return \Stellion\Primbg\Models\Partner
      */
     public function getPartners(): \Stellion\Primbg\Models\Partner
