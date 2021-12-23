@@ -33,9 +33,9 @@ trait FromArrayTrait
                             return $newObject;
                         }, $value));
                     } else {
-                        $value  = new $this->objectConvertMap[$k]($v);
-                        if (!$value instanceof AllowNullIdInterface && method_exists($value , 'getId')) {
-                            if(!$value->getId()) {
+                        $value = new $this->objectConvertMap[$k]($v ?? []);
+                        if (!$value instanceof AllowNullIdInterface && method_exists($value, 'getId')) {
+                            if (!$value->getId()) {
                                 continue;
                             }
                         }

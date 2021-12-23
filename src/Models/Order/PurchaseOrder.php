@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Stellion\Primbg\Models\Order;
 
+use Carbon\Carbon;
 use Stellion\Primbg\Interfaces\Arrayable;
 use Stellion\Primbg\Models\Partner;
 use Stellion\Primbg\Models\RelationalTransport;
@@ -19,23 +20,23 @@ class PurchaseOrder implements Arrayable
      */
     private $id;
     /**
-     * @var string
+     * @var string|null
      */
     private $num;
     /**
-     * @var string
+     * @var string|null
      */
     private $status;
     /**
-     * @var \Stellion\Primbg\Models\RelationalTransport
+     * @var \Stellion\Primbg\Models\RelationalTransport[]|null
      */
     private $relTrans;
     /**
-     * @var string
+     * @var \DateTimeInterface|null
      */
     private $forDate;
     /**
-     * @var string
+     * @var string|null
      */
     private $fromNm;
     /**
@@ -43,7 +44,7 @@ class PurchaseOrder implements Arrayable
      */
     private $receiverNm;
     /**
-     * @var string
+     * @var string|null
      */
     private $actionName;
     /**
@@ -67,7 +68,7 @@ class PurchaseOrder implements Arrayable
      */
     private $traderNm;
     /**
-     * @var string
+     * @var string|null
      */
     private $payTypeNm;
     /**
@@ -79,7 +80,7 @@ class PurchaseOrder implements Arrayable
      */
     private $internalDescription;
     /**
-     * @var \Stellion\Primbg\Models\Partner
+     * @var \Stellion\Primbg\Models\Partner|null
      */
     private $partners;//single?
     /**
@@ -113,93 +114,96 @@ class PurchaseOrder implements Arrayable
      */
     public function getId(): ?int
     {
-        return $this->id ?? null;
+        return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNum(): string
+    public function getNum(): ?string
     {
         return $this->num;
     }
 
     /**
-     * @param string $num
+     * @param string|null $num
      */
-    public function setNum(string $num): void
+    public function setNum(?string $num): void
     {
         $this->num = $num;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
     /**
-     * @param string $status
+     * @param string|null $status
      */
-    public function setStatus(string $status): void
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
 
     /**
-     * @return \Stellion\Primbg\Models\RelationalTransport
+     * @return \Stellion\Primbg\Models\RelationalTransport[]|null
      */
-    public function getRelTrans(): \Stellion\Primbg\Models\RelationalTransport
+    public function getRelTrans(): ?array
     {
         return $this->relTrans;
     }
 
     /**
-     * @param \Stellion\Primbg\Models\RelationalTransport $relTrans
+     * @param \Stellion\Primbg\Models\RelationalTransport[]|\Stellion\Primbg\Models\RelationalTransport|null $relTrans
      */
-    public function setRelTrans(\Stellion\Primbg\Models\RelationalTransport $relTrans): void
+    public function setRelTrans($relTrans): void
     {
+        if($relTrans instanceof RelationalTransport){
+            $relTrans = [$relTrans];
+        }
         $this->relTrans = $relTrans;
     }
 
     /**
-     * @return string
+     * @return \DateTimeInterface|null
      */
-    public function getForDate(): string
+    public function getForDate(): ?\DateTimeInterface
     {
         return $this->forDate;
     }
 
     /**
-     * @param string $forDate
+     * @param string|null $forDate
      */
-    public function setForDate(string $forDate): void
+    public function setForDate(?string $forDate): void
     {
-        $this->forDate = $forDate;
+        $this->forDate = Carbon::parse($forDate);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFromNm(): string
+    public function getFromNm(): ?string
     {
         return $this->fromNm;
     }
 
     /**
-     * @param string $fromNm
+     * @param string|null $fromNm
      */
-    public function setFromNm(string $fromNm): void
+    public function setFromNm(?string $fromNm): void
     {
         $this->fromNm = $fromNm;
     }
@@ -221,17 +225,17 @@ class PurchaseOrder implements Arrayable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getActionName(): string
+    public function getActionName(): ?string
     {
         return $this->actionName;
     }
 
     /**
-     * @param string $actionName
+     * @param string|null $actionName
      */
-    public function setActionName(string $actionName): void
+    public function setActionName(?string $actionName): void
     {
         $this->actionName = $actionName;
     }
@@ -317,17 +321,17 @@ class PurchaseOrder implements Arrayable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPayTypeNm(): string
+    public function getPayTypeNm(): ?string
     {
         return $this->payTypeNm;
     }
 
     /**
-     * @param string $payTypeNm
+     * @param string|null $payTypeNm
      */
-    public function setPayTypeNm(string $payTypeNm): void
+    public function setPayTypeNm(?string $payTypeNm): void
     {
         $this->payTypeNm = $payTypeNm;
     }
@@ -365,18 +369,17 @@ class PurchaseOrder implements Arrayable
     }
 
     /**
-     * Prim is keeping plural form for getting it. So we keep the same method name.
-     * @return \Stellion\Primbg\Models\Partner
+     * @return \Stellion\Primbg\Models\Partner|null
      */
-    public function getPartners(): \Stellion\Primbg\Models\Partner
+    public function getPartners(): ?Partner
     {
         return $this->partners;
     }
 
     /**
-     * @param \Stellion\Primbg\Models\Partner $partners
+     * @param \Stellion\Primbg\Models\Partner|null $partners
      */
-    public function setPartners(\Stellion\Primbg\Models\Partner $partners): void
+    public function setPartners(?Partner $partners): void
     {
         $this->partners = $partners;
     }
@@ -386,7 +389,7 @@ class PurchaseOrder implements Arrayable
      */
     public function getRows(): array
     {
-        return $this->rows;
+        return $this->rows ?? [];
     }
 
     /**
