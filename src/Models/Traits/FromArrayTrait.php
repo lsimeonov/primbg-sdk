@@ -22,6 +22,7 @@ trait FromArrayTrait
             if (method_exists($this, $setter)) {
                 $value = $v;
                 if (isset($this->objectConvertMap[$k])) {
+                    // Value is array of objects to be converted
                     if (is_array($value) && is_array(reset($value))) {
                         $value = array_filter(array_map(function ($item) use ($k) {
                             $newObject = new $this->objectConvertMap[$k]($item);
@@ -32,6 +33,12 @@ trait FromArrayTrait
                             }
                             return $newObject;
                         }, $value));
+                        // Value is array of objects with scalar values and this is allowed
+                    } elseif (isset($this->allowFlatArray) && in_array($k, $this->allowFlatArray) && is_array($value)) {
+                        $value = array_map(function ($item) use ($k) {
+                            return new $this->objectConvertMap[$k]($item);
+                        }, $value);
+                        // Value is a single object
                     } else {
                         $value = new $this->objectConvertMap[$k]($v ?? []);
                         if (!$value instanceof AllowNullIdInterface && method_exists($value, 'getId')) {

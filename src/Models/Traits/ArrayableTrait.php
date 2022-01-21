@@ -17,7 +17,8 @@ trait ArrayableTrait
     protected $excludedProperties = [
         'objectConvertMap',
         'excludedProperties',
-        'castMap'
+        'castMap',
+        'allowFlatArray'
     ];
 
     /**
@@ -40,8 +41,8 @@ trait ArrayableTrait
             if (is_object($value)) {
                 if ($value instanceof Arrayable) {
                     // Remove if no id is set we skip it.
-                    if(!$value instanceof AllowNullIdInterface && method_exists($value, 'getId')){
-                        if(!$value->getId()){
+                    if (!$value instanceof AllowNullIdInterface && method_exists($value, 'getId')) {
+                        if (!$value->getId()) {
                             continue;
                         }
                     }
@@ -53,6 +54,8 @@ trait ArrayableTrait
                 $a[$name] = array_map(function ($v) {
                     if ($v instanceof Arrayable) {
                         return $v->toArray();
+                    } elseif (method_exists($v, '__toString')) {
+                        return $v->__toString();
                     }
                     return $v;
                 }, $value);

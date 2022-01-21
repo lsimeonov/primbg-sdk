@@ -5,6 +5,7 @@ namespace Stellion\Primbg\Models;
 
 
 use Stellion\Primbg\Interfaces\Arrayable;
+use Stellion\Primbg\Models\Item\Barcode;
 use Stellion\Primbg\Models\Item\Status;
 use Stellion\Primbg\Models\Item\Supplier;
 use Stellion\Primbg\Models\Item\Type;
@@ -13,7 +14,8 @@ use Stellion\Primbg\Models\Traits\FromArrayTrait;
 
 class Item implements Arrayable
 {
-    use ArrayableTrait, FromArrayTrait;
+    use ArrayableTrait;
+    use FromArrayTrait;
 
     /**
      * @var int|null
@@ -76,6 +78,11 @@ class Item implements Arrayable
     private $supplier;
 
     /**
+     * @var \Stellion\Primbg\Models\Item\Barcode[]|null
+     */
+    private $barcodes;
+
+    /**
      * @var string[]
      */
     protected array $objectConvertMap = [
@@ -84,7 +91,8 @@ class Item implements Arrayable
         'tp' => Type::class,
         'measures' => Measure::class,
         'status' => Status::class,
-        'supplier' => Supplier::class
+        'supplier' => Supplier::class,
+        'barcodes' => Barcode::class
     ];
 
     protected array $castMap = [
@@ -92,6 +100,10 @@ class Item implements Arrayable
         'expense' => 'bool',
         'income' => 'bool',
         'sku' => 'string'
+    ];
+
+    protected array $allowFlatArray = [
+        'barcodes',
     ];
 
     /**
@@ -293,5 +305,21 @@ class Item implements Arrayable
     public function setSupplier(?Supplier $supplier): void
     {
         $this->supplier = $supplier;
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Item\Barcode[]|null
+     */
+    public function getBarcodes(): ?array
+    {
+        return $this->barcodes;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Item\Barcode[]|null $barcodes
+     */
+    public function setBarcodes(?array $barcodes): void
+    {
+        $this->barcodes = $barcodes;
     }
 }
