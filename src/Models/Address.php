@@ -15,8 +15,8 @@ use Stellion\Primbg\Models\Traits\FromArrayTrait;
  */
 class Address implements Arrayable, AllowNullIdInterface
 {
-    use ArrayableTrait,
-        FromArrayTrait;
+    use ArrayableTrait;
+    use FromArrayTrait;
 
     /**
      * @var int|null
@@ -111,7 +111,8 @@ class Address implements Arrayable, AllowNullIdInterface
         'full_address' => 'string',
         'street' => 'string',
         'nbh' => 'string',
-        'phone' => 'string'
+        'phone' => 'string',
+        'settlement' => 'string'
     ];
 
     /**
