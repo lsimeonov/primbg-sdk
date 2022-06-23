@@ -12,7 +12,7 @@
     "minimum-stability": "stable",
     "require": {
         "ext-json": "*",
-        "guzzlehttp/guzzle": "~7.4",
+        "guzzlehttp/guzzle": "^7.3|^6.4",
         "laravel/helpers": "^1.2"
     },
     "require-dev": {

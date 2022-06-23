@@ -6,6 +6,7 @@ namespace Stellion\Primbg\Models;
 
 use Stellion\Primbg\Interfaces\Arrayable;
 use Stellion\Primbg\Models\Item\Barcode;
+use Stellion\Primbg\Models\Item\Params;
 use Stellion\Primbg\Models\Item\Status;
 use Stellion\Primbg\Models\Item\Supplier;
 use Stellion\Primbg\Models\Item\Type;
@@ -83,6 +84,11 @@ class Item implements Arrayable
     private $barcodes;
 
     /**
+     * @var \Stellion\Primbg\Models\Item\Params|null
+     */
+    private $params;
+
+    /**
      * @var string[]
      */
     protected array $objectConvertMap = [
@@ -92,7 +98,8 @@ class Item implements Arrayable
         'measures' => Measure::class,
         'status' => Status::class,
         'supplier' => Supplier::class,
-        'barcodes' => Barcode::class
+        'barcodes' => Barcode::class,
+        'params' => Params::class
     ];
 
     protected array $castMap = [
@@ -321,5 +328,21 @@ class Item implements Arrayable
     public function setBarcodes(?array $barcodes): void
     {
         $this->barcodes = $barcodes;
+    }
+
+    /**
+     * @param \Stellion\Primbg\Models\Item\Params|null $params
+     */
+    public function setParams(?Params $params): void
+    {
+        $this->params = $params;
+    }
+
+    /**
+     * @return \Stellion\Primbg\Models\Item\Params|null
+     */
+    public function getParams(): ?Params
+    {
+        return $this->params;
     }
 }
