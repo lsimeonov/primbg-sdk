@@ -23,7 +23,7 @@ trait FromArrayTrait
                 $value = $v;
                 if (isset($this->objectConvertMap[$k])) {
                     // Value is array of objects to be converted
-                    if (is_array($value) && is_array(reset($value))) {
+                    if (is_array($value) && $this->isArrayOfObjects($value)) {
                         $value = array_filter(array_map(function ($item) use ($k) {
                             $newObject = new $this->objectConvertMap[$k]($item);
                             if (method_exists($newObject, 'getId')) {
@@ -55,5 +55,19 @@ trait FromArrayTrait
                 $this->$setter($value);
             }
         }
+    }
+
+    private function isArrayOfObjects(array $arr): bool
+    {
+        if (count($arr) == 0) {
+            return false;
+        }
+
+        foreach ($arr as $item) {
+            if (!is_array($item)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
