@@ -109,6 +109,7 @@ class Address implements Arrayable, AllowNullIdInterface
         'zip_num' => 'string',
         'address' => 'string',
         'full_address' => 'string',
+        'district' => 'string',
         'street' => 'string',
         'nbh' => 'string',
         'phone' => 'string',
