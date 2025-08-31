@@ -25,7 +25,9 @@ use Stellion\Primbg\Models\Price;
 use Stellion\Primbg\Models\PriceList;
 use Stellion\Primbg\Models\SaleType;
 use Stellion\Primbg\Models\Service;
+use Stellion\Primbg\Models\Availability;
 use Stellion\Primbg\Requests\SaleOrdersRequest;
+use Stellion\Primbg\Requests\AvailabilitiesRequest;
 use Stellion\Primbg\ValueObjects\Endpoint;
 use Stellion\Primbg\ValueObjects\Token;
 
@@ -657,6 +659,72 @@ class Client
         return array_map(function ($response) {
             return new Service($response);
         }, $body['data']['result']);
+    }
+
+    /**
+     * Fetch availabilities using a request object.
+     *
+     * @param \Stellion\Primbg\Requests\AvailabilitiesRequest $request
+     * @return \Stellion\Primbg\Models\Availability[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getAvailabilities(AvailabilitiesRequest $request): array
+    {
+        $payload = ['data' => $request->getPayload()];
+
+        $body = $this->request('RPC.common.Api.Availabilities.get', [
+            'json' => $payload
+        ]);
+
+        // Extract the result array
+        $result = [];
+        if (isset($body['data']['result']) && is_array($body['data']['result'])) {
+            $result = $body['data']['result'];
+        } elseif (isset($body['result']) && is_array($body['result'])) {
+            $result = $body['result'];
+        } elseif (isset($body['data']) && is_array($body['data'])) {
+            $result = $body['data'];
+        }
+
+        // Convert to Availability objects
+        return array_map(function ($data) {
+            return new Availability($data);
+        }, $result);
+    }
+
+    /**
+     * Fetch availabilities for the provided store names (convenience method).
+     *
+     * @param string[] $storeNames
+     * @return \Stellion\Primbg\Models\Availability[]
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getAvailabilitiesForStores(array $storeNames): array
+    {
+        $request = new AvailabilitiesRequest($storeNames);
+        return $this->getAvailabilities($request);
+    }
+
+    /**
+     * Debug method to get raw response for availabilities
+     *
+     * @param string[] $storeNames
+     * @return array Raw response from API
+     * @throws \Stellion\Primbg\Exceptions\ErrorResponseException
+     * @throws \Stellion\Primbg\Exceptions\Http\HttpBadResponse
+     */
+    public function getAvailabilitiesRawResponse(array $storeNames): array
+    {
+        $request = new AvailabilitiesRequest($storeNames);
+        $payload = ['data' => $request->getPayload()];
+
+        $body = $this->request('RPC.common.Api.Availabilities.get', [
+            'json' => $payload
+        ]);
+
+        return $body;
     }
 
     /**
