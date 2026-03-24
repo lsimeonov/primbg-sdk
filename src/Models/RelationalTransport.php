@@ -38,6 +38,10 @@ class RelationalTransport implements Arrayable
 
     protected $castMap = [
         'num' => 'string',
+        'trans_id' => 'integer',
+        'rel_trans_id' => 'integer',
+        'transId' => 'integer',
+        'relTransId' => 'integer',
     ];
 
     public function __construct(array $attributes = [])
