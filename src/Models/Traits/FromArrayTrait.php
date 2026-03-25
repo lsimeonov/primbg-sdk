@@ -52,9 +52,54 @@ trait FromArrayTrait
                     settype($value, $this->castMap[$k]);
                 }
 
+                $value = $this->normalizeSetterValue($setter, $value);
                 $this->$setter($value);
             }
         }
+    }
+
+    /**
+     * Normalize scalar API payload values based on setter type-hint.
+     *
+     * Prim API may return numeric identifiers as strings ("123"), while
+     * many model setters are strictly typed as int/?int.
+     *
+     * @param string $setter
+     * @param mixed $value
+     * @return mixed
+     */
+    private function normalizeSetterValue(string $setter, $value)
+    {
+        try {
+            $method = new \ReflectionMethod($this, $setter);
+        } catch (\ReflectionException $e) {
+            return $value;
+        }
+
+        $parameters = $method->getParameters();
+        if (count($parameters) !== 1) {
+            return $value;
+        }
+
+        $type = $parameters[0]->getType();
+        if (!$type instanceof \ReflectionNamedType) {
+            return $value;
+        }
+
+        if ($type->getName() !== 'int' || !is_string($value)) {
+            return $value;
+        }
+
+        $trimmed = trim($value);
+        if ($trimmed === '' && $type->allowsNull()) {
+            return null;
+        }
+
+        if (preg_match('/^-?\d+$/', $trimmed) === 1) {
+            return (int) $trimmed;
+        }
+
+        return $value;
     }
 
     private function isArrayOfObjects(array $arr): bool

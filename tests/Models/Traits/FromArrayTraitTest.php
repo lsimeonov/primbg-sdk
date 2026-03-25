@@ -7,6 +7,7 @@ namespace Stellion\Tests\Models\Traits;
 use Stellion\Primbg\Models\Address;
 use Stellion\Primbg\Models\Item\Type;
 use Stellion\Primbg\Models\Order;
+use Stellion\Primbg\Models\Order\PurchaseOrder;
 use Stellion\Primbg\Models\Partner;
 use Stellion\Primbg\Models\RelationalTransport;
 
@@ -53,6 +54,15 @@ class FromArrayTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(123, $model->getTransId());
         $this->assertSame(456, $model->getRelTransId());
         $this->assertSame('789', $model->getNum());
+    }
+
+    public function testPurchaseOrderAcceptsStringId()
+    {
+        $model = new PurchaseOrder([
+            'id' => '3471503949619200',
+        ]);
+
+        $this->assertSame(3471503949619200, $model->getId());
     }
 
 }
